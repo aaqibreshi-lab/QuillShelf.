@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>QuillShelf — A Home for Every Story</title>
+
+  <meta
+    name="description"
+    content="QuillShelf is a modern platform for discovering, sharing and publishing books."
+  >
+
+  <style>
+    :root {
+      --background: #080b14;
+      --surface: #111827;
+      --surface-light: #182235;
+      --text: #f8fafc;
+      --muted: #9ca3af;
+      --primary: #8b5cf6;
+      --secondary: #06b6d4;
+      --border: #263249;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+      background:
+        linear-gradient(
+          180deg,
+          #080b14 0%,
+          #0d1424 100%
+        );
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(8, 11, 20, 0.92);
+      backdrop-filter: blur(15px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .navbar {
+      max-width: 1150px;
+      margin: auto;
+      padding: 15px 20px;
+
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .logo {
+      font-size: 23px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .logo span {
+      color: #a78bfa;
+    }
+
+    .nav-links {
+      margin-left: auto;
+
+      display: flex;
+      gap: 7px;
+    }
+
+    .nav-button {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid transparent;
+      padding: 9px 12px;
+      border-radius: 9px;
+    }
+
+    .nav-button:hover {
+      background: var(--surface);
+      border-color: var(--border);
+    }
+
+    .primary-button {
+      border: none;
+      color: white;
+      font-weight: 700;
+
+      padding: 11px 17px;
+      border-radius: 10px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--primary),
+          var(--secondary)
+        );
+    }
+
+    .secondary-button {
+      border: 1px solid var(--border);
+      color: var(--text);
+      background: transparent;
+
+      padding: 10px 15px;
+      border-radius: 10px;
+    }
+
+    main {
+      max-width: 1150px;
+      margin: auto;
+      padding: 30px 20px 70px;
+    }
+
+    .hero {
+      min-height: 620px;
+
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+
+      align-items: center;
+      gap: 35px;
+    }
+
+    .badge {
+      display: inline-block;
+
+      padding: 7px 11px;
+      border-radius: 999px;
+
+      background: #18233b;
+      border: 1px solid var(--border);
+
+      color: #c4b5fd;
+      font-size: 13px;
+    }
+
+    .hero h1 {
+      font-size: clamp(42px, 7vw, 75px);
+      line-height: 0.98;
+
+      margin: 18px 0;
+
+      letter-spacing: -4px;
+    }
+
+    .hero p {
+      max-width: 650px;
+
+      color: var(--muted);
+
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+
+      margin-top: 25px;
+    }
+
+    .hero-card {
+      background:
+        linear-gradient(
+          145deg,
+          #151f36,
+          #101827
+        );
+
+      border: 1px solid var(--border);
+      border-radius: 22px;
+
+      padding: 28px;
+
+      box-shadow:
+        0 25px 80px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero-card h2 {
+      margin-bottom: 12px;
+    }
+
+    .hero-card p {
+      font-size: 15px;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+
+      gap: 15px;
+
+      margin-top: 25px;
+    }
+
+    .feature {
+      background: var(--surface);
+
+      border: 1px solid var(--border);
+      border-radius: 15px;
+
+      padding: 20px;
+    }
+
+    .feature h3 {
+      margin-bottom: 8px;
+    }
+
+    .feature p {
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    section {
+      margin-top: 45px;
+    }
+
+    .section-title {
+      margin-bottom: 18px;
+    }
+
+    .section-title h2 {
+      font-size: 30px;
+      margin-bottom: 5px;
+    }
+
+    .section-title p {
+      color: var(--muted);
+    }
+
+    .books {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 17px;
+    }
+
+    .book {
+      background: var(--surface);
+
+      border: 1px solid var(--border);
+      border-radius: 16px;
+
+      overflow: hidden;
+
+      transition: transform 0.2s ease;
+    }
+
+    .book:hover {
+      transform: translateY(-4px);
+    }
+
+    .book-cover {
+      height: 210px;
+
+      padding: 18px;
+
+      display: flex;
+      align-items: flex-end;
+
+      background:
+        linear-gradient(
+          135deg,
+          #312e81,
+          #0e7490
+        );
+    }
+
+    .book-cover h3 {
+      font-size: 23px;
+    }
+
+    .book-content {
+      padding: 17px;
+    }
+
+    .book-author {
+      color: #c4b5fd;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .book-description {
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .search-box {
+      width: 100%;
+
+      background: var(--surface);
+      color: var(--text);
+
+      border: 1px solid var(--border);
+      border-radius: 11px;
+
+      padding: 13px 15px;
+
+      margin-bottom: 18px;
+    }
+
+    .panel {
+      background: var(--surface);
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      padding: 22px;
+    }
+
+    .form {
+      display: grid;
+      gap: 15px;
+    }
+
+    .form label {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .form input,
+    .form textarea,
+    .form select {
+      width: 100%;
+
+      margin-top: 7px;
+
+      padding: 12px;
+
+      border-radius: 10px;
+      border: 1px solid var(--border);
+
+      background: #0c1425;
+      color: var(--text);
+    }
+
+    .form textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .stat {
+      background: var(--surface-light);
+
+      padding: 20px;
+
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .stat strong {
+      display: block;
+
+      font-size: 32px;
+
+      margin-top: 5px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+
+      text-align: center;
+
+      color: var(--muted);
+
+      padding: 30px 20px;
+    }
+
+    @media (max-width: 800px) {
+
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+
+        padding: 40px 0;
+      }
+
+      .hero h1 {
+        letter-spacing: -2px;
+      }
+
+      .books {
+        grid-template-columns: 1fr;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+
+  <nav class="navbar">
+
+    <div class="logo">
+      Quill<span>Shelf</span>
+    </div>
+
+    <div class="nav-links">
+
+      <button
+        class="nav-button"
+        onclick="showPage('home')">
+        Home
+      </button>
+
+      <button
+        class="nav-button"
+        onclick="showPage('discover')">
+        Discover
+      </button>
+
+      <button
+        class="nav-button"
+        onclick="showPage('author')">
+        Author Studio
+      </button>
+
+      <button
+        class="nav-button"
+        onclick="showPage('about')">
+        About
+      </button>
+
+    </div>
+
+    <button
+      class="primary-button"
+      onclick="showPage('publish')">
+      Publish a Book
+    </button>
+
+  </nav>
+
+</header>
+
+
+<main>
+
+  <!-- HOME -->
+
+  <section id="home">
+
+    <div class="hero">
+
+      <div>
+
+        <span class="badge">
+          Independent Publishing Platform
+        </span>
+
+        <h1>
+          A home for every story.
+        </h1>
+
+        <p>
+          Discover books, connect with authors,
+          and bring your own stories to readers
+          with QuillShelf.
+        </p>
+
+        <div class="hero-buttons">
+
+          <button
+            class="primary-button"
+            onclick="showPage('discover')">
+            Explore Books
+          </button>
+
+          <button
+            class="secondary-button"
+            onclick="showPage('publish')">
+            Submit Your Book
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="hero-card">
+
+        <h2>
+          Built for writers.
+        </h2>
+
+        <p>
+          QuillShelf gives independent writers
+          a simple place to showcase their books,
+          create an author presence and manage
+          publishing submissions.
+        </p>
+
+        <div class="features">
+
+          <div class="feature">
+            <h3>📚 Discover</h3>
+            <p>
+              Find interesting books and new authors.
+            </p>
+          </div>
+
+          <div class="feature">
+            <h3>✍️ Create</h3>
+            <p>
+              Submit your own book to QuillShelf.
+            </p>
+          </div>
+
+          <div class="feature">
+            <h3>🚀 Publish</h3>
+            <p>
+              Manage your publishing journey.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="section-title">
+
+      <h2>
+        Featured Books
+      </h2>
+
+      <p>
+        Stories currently featured on QuillShelf.
+      </p>
+
+    </div>
+
+
+    <div
+      id="featuredBooks"
+      class="books">
+    </div>
+
+  </section>
+
+
+  <!-- DISCOVER -->
+
+  <section
+    id="discover"
+    class="hidden">
+
+    <div class="section-title">
+
+      <h2>
+        Discover Books
+      </h2>
+
+      <p>
+        Search the QuillShelf library.
+      </p>
+
+    </div>
+
+    <input
+      id="search"
+      class="search-box"
+      type="search"
+      placeholder="Search books, authors or categories..."
+      oninput="searchBooks()"
+    >
+
+    <div
+      id="allBooks"
+      class="books">
+    </div>
+
+  </section>
+
+
+  <!-- PUBLISH -->
+
+  <section
+    id="publish"
+    class="hidden">
+
+    <div class="section-title">
+
+      <h2>
+        Submit Your Book
+      </h2>
+
+      <p>
+        Send your book for publishing review.
+      </p>
+
+    </div>
+
+
+    <div class="panel">
+
+      <form
+        id="publishForm"
+        class="form">
+
+        <label>
+          Book Title
+
+          <input
+            id="bookTitle"
+            type="text"
+            placeholder="Enter your book title"
+            required
+          >
+
+        </label>
+
+
+        <label>
+          Author Name
+
+          <input
+            id="authorName"
+            type="text"
+            placeholder="Enter author name"
+            required
+          >
+
+        </label>
+
+
+        <label>
+          Category
+
+          <select id="category">
+
+            <option>
+              Fiction
+            </option>
+
+            <option>
+              Poetry
+            </option>
+
+            <option>
+              Education
+            </option>
+
+            <option>
+              Biography
+            </option>
+
+            <option>
+              Business
+            </option>
+
+            <option>
+              Other
+            </option>
+
+          </select>
+
+        </label>
+
+
+        <label>
+          Book Description
+
+          <textarea
+            id="description"
+            placeholder="Describe your book..."
+            required>
+          </textarea>
+
+        </label>
+
+
+        <button
+          type="submit"
+          class="primary-button">
+
+          Submit Book for Review
+
+        </button>
+
+      </form>
+
+    </div>
+
+  </section>
+
+
+  <!-- AUTHOR -->
+
+  <section
+    id="author"
+    class="hidden">
+
+    <div class="section-title">
+
+      <h2>
+        Author Studio
+      </h2>
+
+      <p>
+        Manage your QuillShelf submissions.
+      </p>
+
+    </div>
+
+
+    <div class="dashboard">
+
+      <div class="stat">
+
+        <span>
+          Total Books
+        </span>
+
+        <strong id="totalBooks">
+          0
+        </strong>
+
+      </div>
+
+
+      <div class="stat">
+
+        <span>
+          Pending Review
+        </span>
+
+        <strong id="pendingBooks">
+          0
+        </strong>
+
+      </div>
+
+
+      <div class="stat">
+
+        <span>
+          Published
+        </span>
+
+        <strong id="publishedBooks">
+          0
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <br>
+
+
+    <div class="panel">
+
+      <h3>
+        Your Submissions
+      </h3>
+
+      <br>
+
+      <div id="submissions">
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ABOUT -->
+
+  <section
+    id="about"
+    class="hidden">
+
+    <div class="panel">
+
+      <h2>
+        About QuillShelf
+      </h2>
+
+      <br>
+
+      <p style="color:var(--muted);line-height:1.7">
+
+        QuillShelf is a modern publishing platform
+        concept created for independent writers,
+        authors and readers.
+
+        <br><br>
+
+        Our goal is simple:
+
+        <b>
+          Give every story a shelf.
+        </b>
+
+      </p>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<footer>
+
+  © 2026 QuillShelf.
+  A home for every story.
+
+</footer>
+
+
+<script>
+
+  const defaultBooks = [
+
+    {
+      title: "The Quiet Horizon",
+      author: "Aarav Mehta",
+      category: "Fiction",
+      description:
+        "A reflective story about courage, choices and a new beginning.",
+      status: "Published"
+    },
+
+    {
+      title: "Letters to Tomorrow",
+      author: "Mira Khan",
+      category: "Poetry",
+      description:
+        "A collection of poems about hope, memory and change.",
+      status: "Published"
+    },
+
+    {
+      title: "Learning Without Limits",
+      author: "Rohan Das",
+      category: "Education",
+      description:
+        "Simple ideas for building better learning habits.",
+      status: "Published"
+    }
+
+  ];
+
+
+  let books =
+    JSON.parse(
+      localStorage.getItem("quillshelfBooks")
+    ) || defaultBooks;
+
+
+  function saveBooks() {
+
+    localStorage.setItem(
+      "quillshelfBooks",
+      JSON.stringify(books)
+    );
+
+  }
+
+
+  function showPage(page) {
+
+    const pages = [
+      "home",
+      "discover",
+      "publish",
+      "author",
+      "about"
+    ];
+
+    pages.forEach(function(pageName) {
+
+      document
+        .getElementById(pageName)
+        .classList
+        .add("hidden");
+
+    });
+
+
+    document
+      .getElementById(page)
+      .classList
+      .remove("hidden");
+
+
+    if (page === "home") {
+
+      renderFeatured();
+
+    }
+
+
+    if (page === "discover") {
+
+      renderBooks();
+
+    }
+
+
+    if (page === "author") {
+
+      renderDashboard();
+
+    }
+
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+  }
+
+
+  function createBookCard(book) {
+
+    return `
+
+      <article class="book">
+
+        <div class="book-cover">
+
+          <h3>
+            ${escapeHTML(book.title)}
+          </h3>
+
+        </div>
+
+        <div class="book-content">
+
+          <div class="book-author">
+
+            ${escapeHTML(book.author)}
+            ·
+            ${escapeHTML(book.category)}
+
+          </div>
+
+          <p class="book-description">
+
+            ${escapeHTML(book.description)}
+
+          </p>
+
+        </div>
+
+      </article>
+
+    `;
+
+  }
+
+
+  function escapeHTML(text) {
+
+    return String(text)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+
+  }
+
+
+  function renderFeatured() {
+
+    document
+      .getElementById("featuredBooks")
+      .innerHTML =
+        books
+          .slice(0, 3)
+          .map(createBookCard)
+          .join("");
+
+  }
+
+
+  function renderBooks() {
+
+    document
+      .getElementById("allBooks")
+      .innerHTML =
+        books
+          .map(createBookCard)
+          .join("");
+
+  }
+
+
+  function searchBooks() {
+
+    const search =
+      document
+        .getElementById("search")
+        .value
+        .toLowerCase();
+
+
+    const filtered =
+      books.filter(function(book) {
+
+        return (
+
+          book.title
+            .toLowerCase()
+            .includes(search)
+
+          ||
+
+          book.author
+            .toLowerCase()
+            .includes(search)
+
+          ||
+
+          book.category
+            .toLowerCase()
+            .includes(search)
+
+        );
+
+      });
+
+
+    document
+      .getElementById("allBooks")
+      .innerHTML =
+        filtered
+          .map(createBookCard)
+          .join("");
+
+  }
+
+
+  document
+    .getElementById("publishForm")
+    .addEventListener(
+      "submit",
+      function(event) {
+
+        event.preventDefault();
+
+
+        const newBook = {
+
+          title:
+            document
+              .getElementById("bookTitle")
+              .value,
+
+          author:
+            document
+              .getElementById("authorName")
+              .value,
+
+          category:
+            document
+              .getElementById("category")
+              .value,
+
+          description:
+            document
+              .getElementById("description")
+              .value,
+
+          status:
+            "Pending Review"
+
+        };
+
+
+        books.unshift(newBook);
+
+        saveBooks();
+
+
+        document
+          .getElementById("publishForm")
+          .reset();
+
+
+        alert(
+          "Your book has been submitted successfully!"
+        );
+
+
+        showPage("author");
+
+      }
+    );
+
+
+  function renderDashboard() {
+
+    document
+      .getElementById("totalBooks")
+      .textContent =
+        books.length;
+
+
+    document
+      .getElementById("pendingBooks")
+      .textContent =
+        books.filter(
+          book =>
+            book.status === "Pending Review"
+        ).length;
+
+
+    document
+      .getElementById("publishedBooks")
+      .textContent =
+        books.filter(
+          book =>
+            book.status === "Published"
+        ).length;
+
+
+    document
+      .getElementById("submissions")
+      .innerHTML =
+        books
+          .map(function(book) {
+
+            return `
+
+              <div
+                style="
+                  padding:14px 0;
+                  border-bottom:1px solid var(--border);
+                "
+              >
+
+                <strong>
+                  ${escapeHTML(book.title)}
+                </strong>
+
+                <br>
+
+                <small
+                  style="color:var(--muted)"
+                >
+
+                  ${escapeHTML(book.author)}
+                  ·
+                  ${escapeHTML(book.category)}
+
+                </small>
+
+                <br><br>
+
+                <span class="badge">
+
+                  ${escapeHTML(book.status)}
+
+                </span>
+
+              </div>
+
+            `;
+
+          })
+          .join("");
+
+  }
+
+
+  renderFeatured();
+
+</script>
+
+</body>
+</html>
