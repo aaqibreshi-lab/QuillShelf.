@@ -1243,7 +1243,151 @@
     SUPABASE_URL,
     SUPABASE_PUBLISHABLE_KEY
   );
-</script>
+</script>// ===============================
+// QUILLSHELF AUTHENTICATION
+// ===============================
+
+async function signUp() {
+
+  const email =
+    document.getElementById("authEmail").value.trim();
+
+  const password =
+    document.getElementById("authPassword").value;
+
+  const status =
+    document.getElementById("accountStatus");
+
+  if (!email || !password) {
+    status.textContent =
+      "Please enter your email and password.";
+    return;
+  }
+
+  status.textContent = "Creating your account...";
+
+  const { data, error } =
+    await supabaseClient.auth.signUp({
+      email: email,
+      password: password
+    });
+
+  if (error) {
+    status.textContent =
+      "Error: " + error.message;
+    return;
+  }
+
+  if (data.user) {
+
+    status.textContent =
+      "Account created! Check your email if confirmation is required.";
+
+  }
+
+}
+
+
+async function signIn() {
+
+  const email =
+    document.getElementById("authEmail").value.trim();
+
+  const password =
+    document.getElementById("authPassword").value;
+
+  const status =
+    document.getElementById("accountStatus");
+
+  status.textContent = "Signing in...";
+
+  const { data, error } =
+    await supabaseClient.auth.signInWithPassword({
+      email: email,
+      password: password
+    });
+
+  if (error) {
+
+    status.textContent =
+      "Login failed: " + error.message;
+
+    return;
+
+  }
+
+  status.textContent =
+    "You are now signed in.";
+
+  updateAccountUI(data.user);
+
+}
+
+
+async function signOut() {
+
+  const { error } =
+    await supabaseClient.auth.signOut();
+
+  if (error) {
+
+    document.getElementById("accountStatus")
+      .textContent =
+      "Sign out failed: " + error.message;
+
+    return;
+
+  }
+
+  document.getElementById("accountStatus")
+    .textContent =
+    "You have been signed out.";
+
+  updateAccountUI(null);
+
+}
+
+
+function updateAccountUI(user) {
+
+  const logoutButton =
+    document.getElementById("logoutButton");
+
+  const status =
+    document.getElementById("accountStatus");
+
+  if (user) {
+
+    logoutButton.classList.remove("hidden");
+
+    status.textContent =
+      "Signed in as " + user.email;
+
+  } else {
+
+    logoutButton.classList.add("hidden");
+
+  }
+
+}
+
+
+// Check whether a user is already logged in
+async function checkAuthentication() {
+
+  const { data } =
+    await supabaseClient.auth.getSession();
+
+  updateAccountUI(
+    data.session
+      ? data.session.user
+      : null
+  );
+
+}
+
+
+checkAuthentication();
 
 </body>
 </html>
